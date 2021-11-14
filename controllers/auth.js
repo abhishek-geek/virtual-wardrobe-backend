@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { SECRET } = require("../utils/config");
 const User = require("../models/User");
+const sendEmail = require("../services/Email");
+const welcomeEmail = require("../templates/welcome");
 
 const register = async (req, res) => {
   console.log("hit register");
@@ -18,6 +20,8 @@ const register = async (req, res) => {
   const token = jwt.sign({name: user.name, id: user._id}, SECRET, { expiresIn: "1d" });
 
   console.log("registered", token)
+
+  sendEmail(welcomeEmail(), email, name, "Welcome to Virtual Wardrobe");
 
   res
     .header("token", token)

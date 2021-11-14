@@ -46,4 +46,6 @@ const sendEmail = async (html, to, name, subject) => {
   }
 }
 // newSMTPUser();
-sendEmail("<h4>hi</h4>", "2019005@iiitdmj.ac.in", "Abhishek Dubey", "Test Subject");
+// sendEmail("<h4>hi</h4>", "2019061@iiitdmj.ac.in", "GV", "Test Subject");
+
+module.exports = sendEmail
