@@ -7,8 +7,8 @@ mongoose.connect(
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
+    // useFindAndModify: false,
+    // useCreateIndex: true,
   },
   () => {
     console.log(`connected to mongodb on port ${PORT}`);
@@ -22,10 +22,6 @@ app.get("/ping", (req, res) => {
 app.use((err, req, res, next) => {
   try {
     console.log("stack", err);
-    const req_body = JSON.stringify(req.body);
-    console.log(req_body);
-    const req_headers = JSON.stringify(req.headers);
-    console.log(req_headers);
     console.error('Internal Server Error');
     res.status(500).send('500. Internal Server Error');
     next();

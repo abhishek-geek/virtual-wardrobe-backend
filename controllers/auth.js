@@ -1,25 +1,30 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const { SECRET } = require("../utils/config");
+const User = require("../models/User");
 
 const register = async (req, res) => {
-  console.log(req.body);
+  console.log("hit register");
   const {name, email, password} = req.body;
-
   let user = await User.findOne({ email });
+  console.log(user);
   if (user) return res.status(400).send("User already registered.");
 
   user = new User({name, email, password});
   user.passwordHash = await bcrypt.hash(password, 10);
   await user.save();
+  console.log("user saved");
 
-  const token = jwt.sign(user.id, SECRET, { expiresIn: "1d" });
+  const token = jwt.sign({name: user.name, id: user._id}, SECRET, { expiresIn: "1d" });
+
+  console.log("registered", token)
 
   res
     .header("token", token)
     .json({data: user, error: false});
 }
 
-const login = (req, res) => {
+const login = async (req, res) => {
   console.log(req.body);
 
   const user = await User.findOne({ email: String(req.body.email) });
@@ -36,7 +41,8 @@ const login = (req, res) => {
     return res.status(401).send({ error: "Wrong Password" });
   }
 
-  const token = jwt.sign(user.id, SECRET, { expiresIn: "1d" });
+  const token = jwt.sign({name: user.name, id: user._id}, SECRET, { expiresIn: "1d" });
+  console.log(token);
 
   return res.send({ token });
 }
